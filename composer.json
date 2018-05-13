@@ -1,0 +1,42 @@
+{
+    "name": "eristemena/botman-driver-dialogflow",
+    "license": "MIT",
+    "description": "Dialogflow fulfillment driver for BotMan",
+    "keywords": [
+        "Bot",
+        "BotMan",
+        "Slack"
+    ],
+    "homepage": "http://github.com/eristemena/botman-driver-dialogflow",
+    "authors": [
+        {
+            "name": "Eris Ristemena",
+            "email": "e.ristemena@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "botman/botman": "~2.1",
+        "eristemena/dialogflow-fulfillment-webhook-php": "dev-master"
+    },
+    "require-dev": {
+        "botman/studio-addons": "~1.0",
+        "phpunit/phpunit": "~5.0",
+        "illuminate/console": "~5.0",
+        "illuminate/support": "~5.0",
+        "mockery/mockery": "dev-master",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "BotMan\\Drivers\\Dialogflow\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BotMan\\Drivers\\Dialogflow\\Providers\\DialogflowServiceProvider"
+            ]
+        }
+    }
+}
