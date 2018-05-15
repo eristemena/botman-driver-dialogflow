@@ -13,6 +13,8 @@ use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 use Dialogflow\WebhookClient;
 use Dialogflow\RichMessage\RichMessage;
+use Dialogflow\Action\Conversation;
+
 use BotMan\BotMan\Exceptions\Base\BotManException;
 
 use BotMan\BotMan\Messages\Attachments\Image;
@@ -35,9 +37,10 @@ class DialogflowDriver extends HttpDriver
         $this->event = Collection::make((array) $this->payload->get('queryResult'));
         $this->config = Collection::make([]);
 
-        try{
+        try {
             $this->agent = WebhookClient::fromData((array) json_decode($request->getContent(), true));
-        }catch(\Exception $e){}
+        } catch (\Exception $e) {
+        }
     }
 
     /**
@@ -117,13 +120,23 @@ class DialogflowDriver extends HttpDriver
     }
 
     /**
-     * @param string|RichMessage $message
+     * Get Actions on Google DialogflowConversation object
+     *
+     * @return null|\Dialogflow\Action\Conversation
+     */
+    public function getActionConversation()
+    {
+        return $this->agent->getActionConversation();
+    }
+
+    /**
+     * @param string|\Dialogflow\RichMessage\RichMessage|\Dialogflow\Action\Conversation $message
      * @return DialogflowDriver
      * @throws BotManException
      */
     public function addMessage($message)
     {
-        if (!is_string($message) && !$message instanceof RichMessage) {
+        if (!is_string($message) && !$message instanceof RichMessage && !$message instanceof Conversation) {
             throw new BotManException('Invalid message');
         }
 
@@ -143,7 +156,17 @@ class DialogflowDriver extends HttpDriver
     }
 
     /**
-     * @param string|OutgoingMessage|RichMessage|WebhookClient $message
+     * Get Dialogflow Agent
+     *
+     * @return WebhookClient
+     */
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
+    /**
+     * @param string|OutgoingMessage|RichMessage|Conversation|WebhookClient $message
      * @param IncomingMessage $matchingMessage
      * @param array $additionalParameters
      * @return Response
@@ -158,7 +181,7 @@ class DialogflowDriver extends HttpDriver
             if ($attachment instanceof Image) {
                 $this->agent->reply(\Dialogflow\RichMessage\Image::create($attachment->getUrl()));
             }
-        } elseif($message instanceof RichMessage) {
+        } elseif ($message instanceof RichMessage || $message instanceof Conversation) {
             $this->agent->reply($message);
         } else {
             $text = $message;
