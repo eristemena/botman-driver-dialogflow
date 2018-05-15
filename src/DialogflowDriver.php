@@ -2,22 +2,20 @@
 
 namespace BotMan\Drivers\Dialogflow;
 
-use Illuminate\Support\Collection;
-use BotMan\BotMan\Users\User;
 use BotMan\BotMan\Drivers\HttpDriver;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use BotMan\BotMan\Exceptions\Base\BotManException;
+use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
-use Dialogflow\WebhookClient;
-use Dialogflow\RichMessage\RichMessage;
+use BotMan\BotMan\Users\User;
 use Dialogflow\Action\Conversation;
-
-use BotMan\BotMan\Exceptions\Base\BotManException;
-
-use BotMan\BotMan\Messages\Attachments\Image;
+use Dialogflow\RichMessage\RichMessage;
+use Dialogflow\WebhookClient;
+use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DialogflowDriver extends HttpDriver
 {
@@ -45,6 +43,7 @@ class DialogflowDriver extends HttpDriver
 
     /**
      * @param IncomingMessage $matchingMessage
+     *
      * @return \BotMan\BotMan\Users\User
      */
     public function getUser(IncomingMessage $matchingMessage)
@@ -59,11 +58,12 @@ class DialogflowDriver extends HttpDriver
      */
     public function matchesRequest()
     {
-        return ($this->payload->has('queryResult') || $this->payload->has('result'));
+        return $this->payload->has('queryResult') || $this->payload->has('result');
     }
 
     /**
-     * @param  IncomingMessage $message
+     * @param IncomingMessage $message
+     *
      * @return \BotMan\BotMan\Messages\Incoming\Answer
      */
     public function getConversationAnswer(IncomingMessage $message)
@@ -120,7 +120,7 @@ class DialogflowDriver extends HttpDriver
     }
 
     /**
-     * Get Actions on Google DialogflowConversation object
+     * Get Actions on Google DialogflowConversation object.
      *
      * @return null|\Dialogflow\Action\Conversation
      */
@@ -131,8 +131,10 @@ class DialogflowDriver extends HttpDriver
 
     /**
      * @param string|\Dialogflow\RichMessage\RichMessage|\Dialogflow\Action\Conversation $message
-     * @return DialogflowDriver
+     *
      * @throws BotManException
+     *
+     * @return DialogflowDriver
      */
     public function addMessage($message)
     {
@@ -146,7 +148,7 @@ class DialogflowDriver extends HttpDriver
     }
 
     /**
-     * Shortcut to send Dialogflow payload
+     * Shortcut to send Dialogflow payload.
      *
      * @return Response
      */
@@ -156,7 +158,7 @@ class DialogflowDriver extends HttpDriver
     }
 
     /**
-     * Get Dialogflow Agent
+     * Get Dialogflow Agent.
      *
      * @return WebhookClient
      */
@@ -167,8 +169,9 @@ class DialogflowDriver extends HttpDriver
 
     /**
      * @param string|OutgoingMessage|RichMessage|Conversation|WebhookClient $message
-     * @param IncomingMessage $matchingMessage
-     * @param array $additionalParameters
+     * @param IncomingMessage                                               $matchingMessage
+     * @param array                                                         $additionalParameters
+     *
      * @return Response
      */
     public function buildServicePayload($message, $matchingMessage, $additionalParameters = [])
@@ -193,6 +196,7 @@ class DialogflowDriver extends HttpDriver
 
     /**
      * @param mixed $payload
+     *
      * @return Response
      */
     public function sendPayload($payload)
@@ -203,9 +207,10 @@ class DialogflowDriver extends HttpDriver
     /**
      * Low-level method to perform driver specific API requests.
      *
-     * @param string $endpoint
-     * @param array $parameters
+     * @param string          $endpoint
+     * @param array           $parameters
      * @param IncomingMessage $matchingMessage
+     *
      * @return Response
      */
     public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
