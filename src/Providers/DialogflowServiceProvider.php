@@ -2,10 +2,10 @@
 
 namespace BotMan\Drivers\Dialogflow\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\Drivers\Dialogflow\DialogflowDriver;
 use BotMan\Studio\Providers\StudioServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 class DialogflowServiceProvider extends ServiceProvider
 {
@@ -16,7 +16,7 @@ class DialogflowServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (! $this->isRunningInBotManStudio()) {
+        if (!$this->isRunningInBotManStudio()) {
             $this->loadDrivers();
         }
     }

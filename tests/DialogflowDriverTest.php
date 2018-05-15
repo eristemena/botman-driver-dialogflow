@@ -1,17 +1,15 @@
 <?php
+
 namespace Tests;
 
-use Mockery as m;
-use BotMan\BotMan\BotMan;
+use BotMan\BotMan\Exceptions\Base\BotManException;
 use BotMan\BotMan\Http\Curl;
-use PHPUnit_Framework_TestCase;
-use Illuminate\Support\Collection;
-use BotMan\Drivers\Dialogflow\DialogflowDriver;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\Drivers\Dialogflow\DialogflowDriver;
 use Dialogflow\RichMessage\Text;
-use BotMan\BotMan\Exceptions\Base\BotManException;
-
+use Mockery as m;
+use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,13 +34,12 @@ class DialogflowDriverTest extends PHPUnit_Framework_TestCase
 
     private function getValidDriver($requestSource = 'google', $htmlInterface = null)
     {
-        if($requestSource=='google'){
-            $responseData = '{"responseId":"c7a194f4-4a15-473e-a853-87ccfba97b0b","queryResult":{"queryText":"hi nama saya eris","parameters":{"given-name":""},"allRequiredParamsPresent":true,"fulfillmentMessages":[{"text":{"text":[""]}}],"outputContexts":[{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_screen_output","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/_actions_on_google","lifespanCount":93,"parameters":{"given-name.original":"","data":"{}","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_audio_output","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/google_assistant_input_type_keyboard","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_web_browser","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_media_response_audio","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/weather","parameters":{"given-name.original":"","city":"Rome","given-name":""}}],"intent":{"name":"projects/adam-9136f/agent/intents/7ab1aeae-ab58-4bcd-b57e-a7fed8115143","displayName":"test.introduction"},"intentDetectionConfidence":1,"diagnosticInfo":{},"languageCode":"id"},"originalDetectIntentRequest":{"source":"google","version":"2","payload":{"isInSandbox":true,"surface":{"capabilities":[{"name":"actions.capability.WEB_BROWSER"},{"name":"actions.capability.MEDIA_RESPONSE_AUDIO"},{"name":"actions.capability.SCREEN_OUTPUT"},{"name":"actions.capability.AUDIO_OUTPUT"}]},"inputs":[{"rawInputs":[{"query":"hi nama saya eris","inputType":"KEYBOARD"}],"arguments":[{"rawText":"hi nama saya eris","textValue":"hi nama saya eris","name":"text"}],"intent":"actions.intent.TEXT"}],"user":{"userStorage":"{\"data\":{}}","lastSeen":"2018-05-06T02:54:10Z","locale":"id-ID","userId":"ABwppHEW9NgaT5S1NmZYR42yhs0FW1hawZHSjC_xW8FwkoZU1GMoIRAWWoThwUcA7VNX22Jzj8-KqA"},"conversation":{"conversationId":"1525587949165","type":"ACTIVE","conversationToken":"[\"_actions_on_google\",\"weather\"]"},"availableSurfaces":[{"capabilities":[{"name":"actions.capability.SCREEN_OUTPUT"},{"name":"actions.capability.AUDIO_OUTPUT"}]}]}},"session":"projects/adam-9136f/agent/sessions/1525587949165"}'
-            ;
-        }elseif($requestSource=='facebook'){
+        if ($requestSource == 'google') {
+            $responseData = '{"responseId":"c7a194f4-4a15-473e-a853-87ccfba97b0b","queryResult":{"queryText":"hi nama saya eris","parameters":{"given-name":""},"allRequiredParamsPresent":true,"fulfillmentMessages":[{"text":{"text":[""]}}],"outputContexts":[{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_screen_output","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/_actions_on_google","lifespanCount":93,"parameters":{"given-name.original":"","data":"{}","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_audio_output","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/google_assistant_input_type_keyboard","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_web_browser","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/actions_capability_media_response_audio","parameters":{"given-name.original":"","given-name":""}},{"name":"projects/adam-9136f/agent/sessions/1525587949165/contexts/weather","parameters":{"given-name.original":"","city":"Rome","given-name":""}}],"intent":{"name":"projects/adam-9136f/agent/intents/7ab1aeae-ab58-4bcd-b57e-a7fed8115143","displayName":"test.introduction"},"intentDetectionConfidence":1,"diagnosticInfo":{},"languageCode":"id"},"originalDetectIntentRequest":{"source":"google","version":"2","payload":{"isInSandbox":true,"surface":{"capabilities":[{"name":"actions.capability.WEB_BROWSER"},{"name":"actions.capability.MEDIA_RESPONSE_AUDIO"},{"name":"actions.capability.SCREEN_OUTPUT"},{"name":"actions.capability.AUDIO_OUTPUT"}]},"inputs":[{"rawInputs":[{"query":"hi nama saya eris","inputType":"KEYBOARD"}],"arguments":[{"rawText":"hi nama saya eris","textValue":"hi nama saya eris","name":"text"}],"intent":"actions.intent.TEXT"}],"user":{"userStorage":"{\"data\":{}}","lastSeen":"2018-05-06T02:54:10Z","locale":"id-ID","userId":"ABwppHEW9NgaT5S1NmZYR42yhs0FW1hawZHSjC_xW8FwkoZU1GMoIRAWWoThwUcA7VNX22Jzj8-KqA"},"conversation":{"conversationId":"1525587949165","type":"ACTIVE","conversationToken":"[\"_actions_on_google\",\"weather\"]"},"availableSurfaces":[{"capabilities":[{"name":"actions.capability.SCREEN_OUTPUT"},{"name":"actions.capability.AUDIO_OUTPUT"}]}]}},"session":"projects/adam-9136f/agent/sessions/1525587949165"}';
+        } elseif ($requestSource == 'facebook') {
             $responseData = '{"responseId":"b7d5ded4-5f09-4150-b0a4-5b132728a469","queryResult":{"queryText":"tell me something funny","parameters":[],"allRequiredParamsPresent":true,"fulfillmentText":"Why do chicken walk across a street? answer what do you think? how is it funny?","fulfillmentMessages":[{"text":{"text":["When a bus drive"]}}],"outputContexts":[{"name":"projects\/newagent-6a019\/agent\/sessions\/05b84bca-b1a0-4058-859b-9ccf75834558\/contexts\/generic","lifespanCount":4,"parameters":{"facebook_sender_id":"1216233058463560"}}],"intent":{"name":"projects\/newagent-6a019\/agent\/intents\/80c2440c-b0e0-4db5-a2e2-70c5512619e2","displayName":"random.joke"},"intentDetectionConfidence":1,"diagnosticInfo":[],"languageCode":"en"},"originalDetectIntentRequest":{"source":"facebook","payload":{"data":{"sender":{"id":"1216233058463560"},"recipient":{"id":"157333794336390"},"message":{"mid":"mid.$cAACPGAVE-fxpinydvFjWTdU95891","text":"tell me something funny","seq":3764},"timestamp":1526210188732},"source":"facebook"}},"session":"projects\/newagent-6a019\/agent\/sessions\/05b84bca-b1a0-4058-859b-9ccf75834558"}
             ';
-        }else{
+        } else {
             $responseData = '{}';
         }
 
@@ -144,18 +141,18 @@ class DialogflowDriverTest extends PHPUnit_Framework_TestCase
         $this->assertSame([
             'fulfillmentMessages' => [
                 [
-                    "platform" => "ACTIONS_ON_GOOGLE",
-                    "simpleResponses" => [
-                        "simpleResponses" => [
+                    'platform'        => 'ACTIONS_ON_GOOGLE',
+                    'simpleResponses' => [
+                        'simpleResponses' => [
                             [
-                                "textToSpeech" => "string",
-                                "displayText" => "string"
-                            ]
-                        ]
-                    ]
-                ]
+                                'textToSpeech' => 'string',
+                                'displayText'  => 'string',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            'outputContexts' => []
+            'outputContexts' => [],
         ], $payload);
 
         $driver = $this->getValidDriver();
@@ -166,46 +163,44 @@ class DialogflowDriverTest extends PHPUnit_Framework_TestCase
         $this->assertSame([
             'fulfillmentMessages' => [
                 [
-                    "platform" => "ACTIONS_ON_GOOGLE",
-                    "simpleResponses" => [
-                        "simpleResponses" => [
+                    'platform'        => 'ACTIONS_ON_GOOGLE',
+                    'simpleResponses' => [
+                        'simpleResponses' => [
                             [
-                                "textToSpeech" => "message object",
-                                "displayText" => "message object"
-                            ]
-                        ]
-                    ]
-                ]
+                                'textToSpeech' => 'message object',
+                                'displayText'  => 'message object',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            'outputContexts' => []
+            'outputContexts' => [],
         ], $payload);
 
         $driver = $this->getValidDriver();
 
         $message = Text::create()
             ->text('message object')
-            ->ssml('ssml message')
-        ;
+            ->ssml('ssml message');
         $payload = $driver->buildServicePayload($message, $incomingMessage);
 
         $this->assertSame([
             'fulfillmentMessages' => [
                 [
-                    "platform" => "ACTIONS_ON_GOOGLE",
-                    "simpleResponses" => [
-                        "simpleResponses" => [
+                    'platform'        => 'ACTIONS_ON_GOOGLE',
+                    'simpleResponses' => [
+                        'simpleResponses' => [
                             [
-                                "ssml" => "ssml message",
-                                "displayText" => "message object"
-                            ]
-                        ]
-                    ]
-                ]
+                                'ssml'        => 'ssml message',
+                                'displayText' => 'message object',
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            'outputContexts' => []
+            'outputContexts' => [],
         ], $payload);
     }
-
 
     /** @test */
     public function it_can_add_message()
